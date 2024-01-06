@@ -1,5 +1,6 @@
 import {useEffect, useState} from 'react'
 import {socket} from "./socket.js";
+import './App.css';
 
 function App() {
     const [lobbies, setLobbies] = useState([]);
@@ -114,7 +115,11 @@ function App() {
                     <div>Not in a game</div>
                     :
                     <>
-                        <div> Game Info: {game.id}</div>
+                        <div> Game Info: {game.id} {game.gameState}</div>
+                        <div> Hakem: {game.hakem === null ? 'Not selected' : game.hakem.id}</div>
+                        <div> Hokm: {game.hokm}</div>
+
+                        <button onClick={() => socket.emit('start-game', {gameId: game.id})}>Start Game</button>
 
                         <hr />
 
@@ -123,13 +128,40 @@ function App() {
                             <div>
                                 <div>Player1</div>
                                 <div>ID: {game.teamOne.playerOne === null ? 'Empty' : game.teamOne.playerOne.id}</div>
-                                <div>is Hakem: {game.teamOne.playerOne === null || game.teamOne.playerOne.id !== game.hakem ? 'false' : 'true'}</div>
+
+                                <div className={"cards"}>
+                                    {
+                                        game.teamOne.playerOne ?
+                                        game.teamOne.playerOne.cards.filter(c => !c.placed).map((card, index) => (
+                                            <div className={"card"} key={index}>
+                                                <div>{card.suit}</div>
+                                                <div>{card.value}</div>
+                                            </div>
+                                        ))
+                                            :
+                                            ''
+                                    }
+                                </div>
+
                             </div>
 
                             <div>
                                 <div>Player2</div>
                                 <div>ID: {game.teamOne.playerTwo === null ? 'Empty' : game.teamOne.playerTwo.id}</div>
-                                <div>is Hakem: {game.teamOne.playerTwo === null || game.teamOne.playerTwo.id !== game.hakem ? 'false' : 'true'}</div>
+
+                                <div className={"cards"}>
+                                {
+                                    game.teamOne.playerTwo ?
+                                    game.teamOne.playerTwo.cards.filter(c => !c.placed).map((card, index) => (
+                                        <div className={"card"} key={index}>
+                                            <div>{card.suit}</div>
+                                            <div>{card.value}</div>
+                                        </div>
+                                    ))
+                                        :
+                                        ''
+                                }
+                                </div>
                             </div>
 
                         </div>
@@ -139,13 +171,37 @@ function App() {
                             <div>
                                 <div>Player1</div>
                                 <div>ID: {game.teamTwo.playerOne === null ? 'Empty' : game.teamTwo.playerOne.id}</div>
-                                <div>is Hakem: {game.teamTwo.playerOne === null || game.teamTwo.playerOne.id !== game.hakem ? 'false' : 'true'}</div>
+                                <div className={"cards"}>
+                                {
+                                    game.teamTwo.playerOne ?
+                                    game.teamTwo.playerOne.cards.filter(c => !c.placed).map((card, index) => (
+                                        <div className={"card"} key={index}>
+                                            <div>{card.suit}</div>
+                                            <div>{card.value}</div>
+                                        </div>
+                                    ))
+                                        :
+                                        ''
+                                }
+                                </div>
                             </div>
 
                             <div>
                                 <div>Player2</div>
                                 <div>ID: {game.teamTwo.playerTwo === null ? 'Empty' : game.teamTwo.playerTwo.id}</div>
-                                <div>is Hakem: {game.teamTwo.playerTwo === null || game.teamTwo.playerTwo.id !== game.hakem ? 'false' : 'true'}</div>
+                                <div className={"cards"}>
+                                {
+                                    game.teamTwo.playerTwo ?
+                                    game.teamTwo.playerTwo.cards.filter(c => !c.placed).map((card, index) => (
+                                        <div className={"card"} key={index}>
+                                            <div>{card.suit}</div>
+                                            <div>{card.value}</div>
+                                        </div>
+                                    ))
+                                        :
+                                        ''
+                                }
+                                </div>
                             </div>
 
                         </div>

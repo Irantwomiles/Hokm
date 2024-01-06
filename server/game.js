@@ -1,5 +1,7 @@
 import Team from "./team.js";
 import Deck from './deck.js';
+import {io} from './server_manager.js';
+
 export default class Game {
     constructor(id, playerData) {
         this.id = id;
@@ -26,6 +28,11 @@ export default class Game {
 
         this.hakem = null;
         this.hokm = '';
+
+        this.placementOrder = [];
+        this.placementTurn = 0;
+
+        this.cardsDown = [];
     }
 
     /**
@@ -60,6 +67,7 @@ export default class Game {
         }
 
         this.gameState = 'PICK_HAKEM';
+
         this.handleSelectHakem();
         // this.gameTimer = setInterval(this.handleGameLoop, 1000);
     }
@@ -94,6 +102,8 @@ export default class Game {
             idx += 5;
         }
 
+        io.to(this.id).emit('update-game-state', this);
+
         console.log(`[Server] Waiting for HAKEM ${this.hakem.name} to pick a HOKM`);
 
         // emit signal to select a Hokm
@@ -105,7 +115,7 @@ export default class Game {
 
             this.handleSelectHokm(this.hakem.id, suit);
             console.log(`[Server] HAKEM did not select HOKM in the alloted time, picked one automatically ${this.hokm}`);
-        }, 1000 * 60);
+        }, 1000 * 20);
     }
 
     handleSelectHokm(id, suit) {
@@ -139,9 +149,13 @@ export default class Game {
             }
         }
 
-        this.gameState = 'GAME_STARTED';
+        this.setPlacementOrder(this.hakem.id);
+
+        this.gameState = 'PLACE_CARD';
+
         clearTimeout(this.gameTimeout);
 
+        io.to(this.id).emit('update-game-state', this);
         console.log(`[Server] Game started ${this.gameState} ${this.getPlayers()}`);
     }
 
@@ -156,4 +170,83 @@ export default class Game {
     isHakem(id) {
         return id !== null && id === this.hakem;
     }
+
+    setPlacementOrder(id) {
+
+        switch(id) {
+            case this.teamOne.playerOne.id: {
+                this.placementOrder = [this.teamOne.playerOne.id, this.teamTwo.playerOne.id, this.teamOne.playerTwo.id, this.teamTwo.playerTwo.id];
+                break;
+            }
+            case this.teamOne.playerTwo.id: {
+                this.placementOrder = [this.teamOne.playerTwo.id, this.teamTwo.playerTwo.id, this.teamOne.playerOne.id, this.teamTwo.playerOne.id];
+                break;
+            }
+            case this.teamTwo.playerOne.id: {
+                this.placementOrder = [this.teamTwo.playerOne.id, this.teamOne.playerOne.id, this.teamTwo.playerTwo.id, this.teamOne.playerTwo.id];
+                break;
+            }
+            case this.teamTwo.playerTwo.id: {
+                this.placementOrder = [this.teamTwo.playerTwo.id, this.teamOne.playerTwo.id, this.teamTwo.playerOne.id, this.teamOne.playerOne.id];
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    placeDownCard(playerId, cardIndex) {
+
+        if(this.gameState !== 'PLACE_CARD') {
+            console.log(`[Server] Game must be in PLACE_CARD ${this.gameState}`);
+            return;
+        }
+
+        if(this.placementOrder[this.placementTurn] !== playerId) {
+            console.log(`[Server] It is not your turn to place down a card ${this.placementOrder[this.placementTurn]}!=${playerId}`);
+            return;
+        }
+
+        if(this.cardsDown >= 4) {
+            console.log(`[Server] There can only be 4 cards down at a time ${this.cardsDown.length}`);
+            return;
+        }
+
+        const player = this.getPlayer(playerId);
+
+        if(!player) {
+            console.log(`[Server] Could not find player with id ${playerId}`);
+            return;
+        }
+
+        if(cardIndex > 12 || cardIndex < 0) {
+            console.log(`[Server] card index must be between 0-12 inclusive ${cardIndex}`);
+            return;
+        }
+
+        if(player.cards[cardIndex].placed) {
+            console.log(`[Server] this card was already placed down ${cardIndex}`);
+            return;
+        }
+
+        player.cards[cardIndex].placed = true;
+        this.cardsDown.push(player.cards[cardIndex]);
+
+        if(this.cardsDown.length === 4) {
+            //calculate who won the round
+
+            return;
+        }
+
+        this.placementTurn++;
+    }
+
+    getPlayer(id) {
+        for(const p of this.getPlayers()) {
+            if(p !== null && p.id === id) return p;
+        }
+
+        return null;
+    }
+
 }

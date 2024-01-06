@@ -1,18 +1,8 @@
-import express from 'express';
-const app = express();
-import http from 'http';
-const server = http.createServer(app);
-import { Server } from 'socket.io';
+import {io, server} from './server_manager.js';
 import { v4 as uuid } from 'uuid';
 import 'path';
 
 import GameManager from "./game_manager.js";
-
-const io = new Server(server, {
-    cors: {
-       origin: "http://localhost:5173"
-    }
-});
 
 const PORT = 3030;
 

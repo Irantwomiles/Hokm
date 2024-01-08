@@ -1,7 +1,9 @@
+import {v4 as uuid} from "uuid";
+
 export default class Deck {
     constructor() {
 
-        const suits = ['Heart', 'Space', 'Clover', 'Diamond'];
+        const suits = ['HEART', 'SPADE', 'CLOVER', 'DIAMOND'];
         this.cards = [];
 
         for(const suit of suits) {
@@ -34,6 +36,7 @@ class Card {
     // Suits: Heart, Spade, Clover, Diamond
     // Values: 14(A), 2, 3, 4, 5, 6, 7, 8, 9, 10, 11(J), 12(Q), 13(K)
     constructor(suit, value) {
+        this.id = uuid();
         this.suit = suit;
         this.value = value;
         this.placed = false;

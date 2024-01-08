@@ -32,6 +32,8 @@ export default class Game {
         this.placementOrder = [];
         this.placementTurn = 0;
 
+        this.currentRoundSuit = null;
+
         this.cardsDown = [];
     }
 
@@ -195,7 +197,7 @@ export default class Game {
         }
     }
 
-    placeDownCard(playerId, cardIndex) {
+    placeDownCard(playerId, cardId) {
 
         if(this.gameState !== 'PLACE_CARD') {
             console.log(`[Server] Game must be in PLACE_CARD ${this.gameState}`);
@@ -219,31 +221,100 @@ export default class Game {
             return;
         }
 
-        if(cardIndex > 12 || cardIndex < 0) {
-            console.log(`[Server] card index must be between 0-12 inclusive ${cardIndex}`);
+        const card = player.cards.find(c => c.id === cardId);
+
+        if(!card) {
+            console.log(`[Server] could not find card with id ${cardId}`);
             return;
         }
 
-        if(player.cards[cardIndex].placed) {
-            console.log(`[Server] this card was already placed down ${cardIndex}`);
+        if(card.placed) {
+            console.log(`[Server] this card was already placed down ${card.id}`);
             return;
         }
 
-        player.cards[cardIndex].placed = true;
-        this.cardsDown.push(player.cards[cardIndex]);
+        if(this.currentRoundSuit === null) {
+            this.currentRoundSuit = card.suit;
+        } else {
+
+            // card does not match the current suit of the round
+            if(card.suit !== this.currentRoundSuit) {
+
+                if(this.handHasSuit(player.cards, this.currentRoundSuit)) {
+                    console.log(`[Server] you must place down a card with the suit ${this.currentRoundSuit}`);
+                    return;
+                }
+            }
+        }
+
+
+        card.placed = true;
+
+        this.cardsDown.push({card, playerId: player.id});
+
+        console.log(`[Server] placed card down. card: ${cardId}, placementTurn: ${this.placementTurn}`);
 
         if(this.cardsDown.length === 4) {
             //calculate who won the round
+            let max = null;
+            for(const c of this.cardsDown) {
+                if(max === null) {
+                    max = c;
+                } else {
+                    if(c.card.suit !== this.currentRoundSuit && c.card.suit !== this.hokm) continue;
 
+                    const value = c.card.suit === this.hokm ? c.card.value * 100 : c.card.value;
+
+                    if(max.card.value < value) {
+                        max = c;
+                    }
+                }
+            }
+
+            const team = this.getPlayerTeam(max.playerId);
+            if(team === null) {
+                console.log(`[Server] player team is null, should not be happening ${max.playerId}`);
+                return;
+            }
+
+            team.points++;
+
+            this.placementTurn = 0;
+            this.currentRoundSuit = null;
+            this.cardsDown = [];
+            this.setPlacementOrder(max.playerId);
+
+            io.to(this.id).emit('update-game-state', this);
             return;
         }
 
         this.placementTurn++;
+        io.to(this.id).emit('update-game-state', this);
     }
 
     getPlayer(id) {
         for(const p of this.getPlayers()) {
             if(p !== null && p.id === id) return p;
+        }
+
+        return null;
+    }
+
+    handHasSuit(cards, suit) {
+        for(const c of cards) {
+            if(c.suit === suit && !c.placed) return true;
+        }
+
+        return false;
+    }
+
+    getPlayerTeam(playerId) {
+        if(this.teamOne.playerOne.id === playerId || this.teamOne.playerTwo.id === playerId) {
+            return this.teamOne;
+        }
+
+        if(this.teamTwo.playerOne.id === playerId || this.teamTwo.playerTwo.id === playerId) {
+            return this.teamTwo;
         }
 
         return null;

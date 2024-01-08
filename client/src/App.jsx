@@ -124,7 +124,7 @@ function App() {
                         <hr />
 
                         <div style={{marginBottom: "1rem"}}>
-                            <div>Team One</div>
+                            <div>Team One: {game.teamOne.points}</div>
                             <div>
                                 <div>Player1</div>
                                 <div>ID: {game.teamOne.playerOne === null ? 'Empty' : game.teamOne.playerOne.id}</div>
@@ -136,6 +136,11 @@ function App() {
                                             <div className={"card"} key={index}>
                                                 <div>{card.suit}</div>
                                                 <div>{card.value}</div>
+                                                <button onClick={() => socket.emit('place-card', {
+                                                    gameId: game.id,
+                                                    playerId: socket.id,
+                                                    cardId: card.id
+                                                })}>Place</button>
                                             </div>
                                         ))
                                             :
@@ -156,6 +161,11 @@ function App() {
                                         <div className={"card"} key={index}>
                                             <div>{card.suit}</div>
                                             <div>{card.value}</div>
+                                            <button onClick={() => socket.emit('place-card', {
+                                                gameId: game.id,
+                                                playerId: socket.id,
+                                                cardId: card.id
+                                            })}>Place</button>
                                         </div>
                                     ))
                                         :
@@ -167,7 +177,7 @@ function App() {
                         </div>
 
                         <div>
-                            <div>Team Two</div>
+                            <div>Team Two: {game.teamTwo.points}</div>
                             <div>
                                 <div>Player1</div>
                                 <div>ID: {game.teamTwo.playerOne === null ? 'Empty' : game.teamTwo.playerOne.id}</div>
@@ -178,6 +188,11 @@ function App() {
                                         <div className={"card"} key={index}>
                                             <div>{card.suit}</div>
                                             <div>{card.value}</div>
+                                            <button onClick={() => socket.emit('place-card', {
+                                                gameId: game.id,
+                                                playerId: socket.id,
+                                                cardId: card.id
+                                            })}>Place</button>
                                         </div>
                                     ))
                                         :
@@ -196,6 +211,11 @@ function App() {
                                         <div className={"card"} key={index}>
                                             <div>{card.suit}</div>
                                             <div>{card.value}</div>
+                                            <button onClick={() => socket.emit('place-card', {
+                                                gameId: game.id,
+                                                playerId: socket.id,
+                                                cardId: card.id
+                                            })}>Place</button>
                                         </div>
                                     ))
                                         :

@@ -3,14 +3,14 @@ import Deck from './deck.js';
 import {io} from './server_manager.js';
 
 export default class Game {
-    constructor(id, playerData) {
+    constructor(id, socketId, playerData) {
         this.id = id;
         this.roomName = `${playerData.playerName}'s lobby`;
 
         this.teamOne = new Team();
         this.teamTwo = new Team();
 
-        this.teamOne.addPlayer(playerData);
+        this.teamOne.addPlayer(socketId, playerData);
 
         this.deck = new Deck();
         this.deck.shuffle();
@@ -39,17 +39,18 @@ export default class Game {
 
     /**
      * Adds player to a non-full team if there is one and returns true, returns false otherwise.
+     * @param socketId
      * @param playerData
      * @returns {boolean}
      */
-    joinGame(playerData) {
+    joinGame(socketId, playerData) {
         if(!this.teamOne.isFull()) {
-            this.teamOne.addPlayer(playerData);
+            this.teamOne.addPlayer(socketId, playerData);
             return true;
         }
 
         if(!this.teamTwo.isFull()) {
-            this.teamTwo.addPlayer(playerData);
+            this.teamTwo.addPlayer(socketId, playerData);
             return true;
         }
 
@@ -104,7 +105,7 @@ export default class Game {
             idx += 5;
         }
 
-        io.to(this.id).emit('update-game-state', this);
+        this.updateGameState();
 
         console.log(`[Server] Waiting for HAKEM ${this.hakem.name} to pick a HOKM`);
 
@@ -157,8 +158,8 @@ export default class Game {
 
         clearTimeout(this.gameTimeout);
 
-        io.to(this.id).emit('update-game-state', this);
-        console.log(`[Server] Game started ${this.gameState} ${this.getPlayers()}`);
+        this.updateGameState();
+        console.log(`[Server] Game started ${this.gameState}`);
     }
 
     getPlayers() {
@@ -284,12 +285,12 @@ export default class Game {
             this.cardsDown = [];
             this.setPlacementOrder(max.playerId);
 
-            io.to(this.id).emit('update-game-state', this);
+            this.updateGameState();
             return;
         }
 
         this.placementTurn++;
-        io.to(this.id).emit('update-game-state', this);
+        this.updateGameState();
     }
 
     getPlayer(id) {
@@ -318,6 +319,46 @@ export default class Game {
         }
 
         return null;
+    }
+
+    getGameState() {
+
+        const p1 = this.teamOne.playerOne ? this.teamOne.playerOne.getPlayerInfo() : null;
+        const p2 = this.teamOne.playerTwo ? this.teamOne.playerTwo.getPlayerInfo() : null;
+        const p3 = this.teamTwo.playerOne ? this.teamTwo.playerOne.getPlayerInfo() : null;
+        const p4 = this.teamTwo.playerTwo ? this.teamTwo.playerTwo.getPlayerInfo() : null;
+
+        return {
+            id: this.id,
+            roomName: this.roomName,
+            deck: this.deck,
+            gameState: this.gameState,
+            gameTimer: this.gameTimer,
+            hakem: this.hakem,
+            hokm: this.hokm,
+            placementOrder: this.placementOrder,
+            placementTurn: this.placementTurn,
+            currentRoundSuit: this.currentRoundSuit,
+            cardsDown: this.cardsDown,
+            teamOne: [p1, p2],
+            teamTwo: [p3, p4],
+        }
+    }
+
+    /**
+     * Update the game state and send each player their cards individually
+     */
+    updateGameState() {
+        io.to(this.id).emit('update-game-state', this.getGameState());
+        for(const player of this.getPlayers()) {
+            if(player === null) continue;
+
+            try {
+                io.to(player.socketId).emit('update-player-cards', player.cards);
+            } catch(e) {
+                console.log(e);
+            }
+        }
     }
 
 }

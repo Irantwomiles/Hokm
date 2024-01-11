@@ -20,7 +20,7 @@ io.on('connection', (socket) => {
 
     socket.on('create-room', ({playerName}) => {
         const game = gameManager.createGame(socket, {playerId: socket.id, playerName: playerName});
-        socket.emit('create-room-response', game);
+        socket.emit('create-room-response', game.getGameState());
     });
 
     socket.on('join-room', async ({roomId, playerName}) => {

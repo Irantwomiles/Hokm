@@ -20,7 +20,9 @@ export default class GameManager {
         }
 
         const id = uuid();
-        const game = new Game(id, playerData);
+        const game = new Game(id, socket.id, playerData);
+
+        console.log(game);
 
         this.games.set(id, game);
         socket.join(id);
@@ -56,14 +58,14 @@ export default class GameManager {
             }
         }
 
-        game.joinGame(playerData);
+        game.joinGame(socket.id, playerData);
         socket.join(id);
 
         // send a message with the updated game state to the person joining
-        socket.emit('join-room-response', game);
+        socket.emit('join-room-response', game.getGameState());
 
         // send a message to the entire room with updated game state
-        socket.to(id).emit('update-game-state', game);
+        game.updateGameState()
 
         console.log(`[Server] User ${playerData.playerName} joined lobby ${game.roomName} `);
         return game;

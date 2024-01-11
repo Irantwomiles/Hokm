@@ -7,6 +7,7 @@ function App() {
     const [playerName, setPlayerName] = useState("");
     const [isConnected, setIsConnected] = useState(false);
     const [game, setGame] = useState(null);
+    const [cards, setCards] = useState([]);
 
     const handleConnect = () => {
         socket.connect();
@@ -47,27 +48,23 @@ function App() {
             setLobbies(lobbies);
         }
 
-        function onCreateRoom(game) {
-            setGame(game);
-            console.log('create room game:', game);
-        }
-
         function updateGameState(game) {
             setGame(game);
             console.log('Updated game:', game);
         }
 
-        function onJoinRoom(game) {
-            console.log('join room game:', game);
-            setGame(game);
+        function updatePlayerCards(cards) {
+            setCards(cards);
+            console.log('Updated cards:', cards);
         }
 
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         socket.on('lobbies', updateLobbies);
-        socket.on('create-room-response', onCreateRoom);
+        socket.on('create-room-response', updateGameState);
         socket.on('update-game-state', updateGameState);
-        socket.on('join-room-response', onJoinRoom);
+        socket.on('join-room-response', updateGameState);
+        socket.on('update-player-cards', updatePlayerCards);
 
         return () => {
             handleDisconnect();
@@ -75,9 +72,10 @@ function App() {
             socket.off('connect', onConnect);
             socket.off('disconnect', onDisconnect);
             socket.off('lobbies', updateLobbies);
-            socket.off('create-room-response', onCreateRoom);
+            socket.off('create-room-response', updateGameState);
             socket.off('update-game-state', updateGameState);
-            socket.off('join-room-response', onJoinRoom);
+            socket.off('join-room-response', updateGameState);
+            socket.off('update-player-cards', updatePlayerCards);
         }
 
     }, []);
@@ -127,51 +125,12 @@ function App() {
                             <div>Team One: {game.teamOne.points}</div>
                             <div>
                                 <div>Player1</div>
-                                <div>ID: {game.teamOne.playerOne === null ? 'Empty' : game.teamOne.playerOne.id}</div>
-
-                                <div className={"cards"}>
-                                    {
-                                        game.teamOne.playerOne ?
-                                        game.teamOne.playerOne.cards.filter(c => !c.placed).map((card, index) => (
-                                            <div className={"card"} key={index}>
-                                                <div>{card.suit}</div>
-                                                <div>{card.value}</div>
-                                                <button onClick={() => socket.emit('place-card', {
-                                                    gameId: game.id,
-                                                    playerId: socket.id,
-                                                    cardId: card.id
-                                                })}>Place</button>
-                                            </div>
-                                        ))
-                                            :
-                                            ''
-                                    }
-                                </div>
-
+                                <div>ID: {game.teamOne[0] === null ? 'Empty' : game.teamOne[0].id}</div>
                             </div>
 
                             <div>
                                 <div>Player2</div>
-                                <div>ID: {game.teamOne.playerTwo === null ? 'Empty' : game.teamOne.playerTwo.id}</div>
-
-                                <div className={"cards"}>
-                                {
-                                    game.teamOne.playerTwo ?
-                                    game.teamOne.playerTwo.cards.filter(c => !c.placed).map((card, index) => (
-                                        <div className={"card"} key={index}>
-                                            <div>{card.suit}</div>
-                                            <div>{card.value}</div>
-                                            <button onClick={() => socket.emit('place-card', {
-                                                gameId: game.id,
-                                                playerId: socket.id,
-                                                cardId: card.id
-                                            })}>Place</button>
-                                        </div>
-                                    ))
-                                        :
-                                        ''
-                                }
-                                </div>
+                                <div>ID: {game.teamOne[1] === null ? 'Empty' : game.teamOne[1].id}</div>
                             </div>
 
                         </div>
@@ -180,53 +139,37 @@ function App() {
                             <div>Team Two: {game.teamTwo.points}</div>
                             <div>
                                 <div>Player1</div>
-                                <div>ID: {game.teamTwo.playerOne === null ? 'Empty' : game.teamTwo.playerOne.id}</div>
-                                <div className={"cards"}>
-                                {
-                                    game.teamTwo.playerOne ?
-                                    game.teamTwo.playerOne.cards.filter(c => !c.placed).map((card, index) => (
-                                        <div className={"card"} key={index}>
-                                            <div>{card.suit}</div>
-                                            <div>{card.value}</div>
-                                            <button onClick={() => socket.emit('place-card', {
-                                                gameId: game.id,
-                                                playerId: socket.id,
-                                                cardId: card.id
-                                            })}>Place</button>
-                                        </div>
-                                    ))
-                                        :
-                                        ''
-                                }
-                                </div>
+                                <div>ID: {game.teamTwo[0] === null ? 'Empty' : game.teamTwo[0].id}</div>
                             </div>
 
                             <div>
                                 <div>Player2</div>
-                                <div>ID: {game.teamTwo.playerTwo === null ? 'Empty' : game.teamTwo.playerTwo.id}</div>
-                                <div className={"cards"}>
-                                {
-                                    game.teamTwo.playerTwo ?
-                                    game.teamTwo.playerTwo.cards.filter(c => !c.placed).map((card, index) => (
-                                        <div className={"card"} key={index}>
-                                            <div>{card.suit}</div>
-                                            <div>{card.value}</div>
-                                            <button onClick={() => socket.emit('place-card', {
-                                                gameId: game.id,
-                                                playerId: socket.id,
-                                                cardId: card.id
-                                            })}>Place</button>
-                                        </div>
-                                    ))
-                                        :
-                                        ''
-                                }
-                                </div>
+                                <div>ID: {game.teamTwo[1] === null ? 'Empty' : game.teamTwo[1].id}</div>
                             </div>
-
                         </div>
                     </>
 
+            }
+
+            {
+                 <div className={"cards"}>
+                    {
+                        cards ?
+                            cards.filter(c => !c.placed).map((card, index) => (
+                                <div className={"card"} key={index}>
+                                    <div>{card.suit}</div>
+                                    <div>{card.value}</div>
+                                    <button onClick={() => socket.emit('place-card', {
+                                        gameId: game.id,
+                                        playerId: socket.id,
+                                        cardId: card.id
+                                    })}>Place</button>
+                                </div>
+                            ))
+                            :
+                            ''
+                    }
+                </div>
             }
 
 
@@ -234,4 +177,4 @@ function App() {
     )
 }
 
-export default App
+export default App;

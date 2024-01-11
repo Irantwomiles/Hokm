@@ -13,18 +13,19 @@ export default class Team {
 
     /**
      * Adds a player to a team if there is a slot available and returns true, returns false otherwise.
+     * @param socketId
      * @param playerId
      * @param playerName
      * @returns {boolean}
      */
-    addPlayer({playerId, playerName}) {
+    addPlayer(socketId, {playerId, playerName}) {
         if(this.playerOne === null) {
-            this.playerOne = new Player(playerId, playerName);
+            this.playerOne = new Player(socketId, playerId, playerName);
             return true;
         }
 
         if(this.playerTwo === null) {
-            this.playerTwo = new Player(playerId, playerName);
+            this.playerTwo = new Player(socketId, playerId, playerName);
             return true;
         }
 

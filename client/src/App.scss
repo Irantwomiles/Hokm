@@ -1,0 +1,52 @@
+@import url('https://fonts.googleapis.com/css2?family=Rubik&display=swap');
+@import '../node_modules/bootstrap/scss/bootstrap.scss';
+
+// https://www.realtimecolors.com/?colors=e1e6f7-050711-8f9ee2-612283-d04dd1&fonts=Poppins-Poppins
+
+$purple-1: #050711;
+$purple-2: #E1E6F7;
+$purple-3: #8F9EE2;
+$purple-4: #612283;
+
+* {
+  font-family: 'Rubik', sans-serif;
+  background-color: $purple-1;
+  color: $purple-2;
+}
+
+.connect-form {
+  max-width: 30rem;
+}
+
+.btn-one {
+  background-color: $purple-3;
+  color: white;
+
+  &:hover {
+    background-color: darken($purple-3, 5%);
+  }
+
+  &:focus-visible {
+    background-color: darken($purple-3, 5%);
+  }
+
+  &:active {
+    background-color: darken($purple-3, 5%);
+  }
+
+  &:focus-visible {
+    background-color: darken($purple-3, 5%);
+  }
+}
+
+.cards {
+  display: flex;
+  align-items: center;
+}
+
+.card {
+  border: 1px solid white;
+  margin-right: 0.5rem;
+  border-radius: 0.25rem;
+  padding: 4rem 2rem;
+}

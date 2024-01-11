@@ -1,6 +1,7 @@
 import {useEffect, useState} from 'react'
 import {socket} from "./socket.js";
-import './App.css';
+import './App.scss';
+import Connection from "./Connection.jsx";
 
 function App() {
     const [lobbies, setLobbies] = useState([]);
@@ -10,6 +11,7 @@ function App() {
     const [cards, setCards] = useState([]);
 
     const handleConnect = () => {
+        if(playerName.length === 0) return;
         socket.connect();
     }
 
@@ -82,13 +84,22 @@ function App() {
 
     return (
         <>
-            <div>
-                <label>Set Username</label>
-                <input onChange={(e) => setPlayerName(e.target.value)} />
-            </div>
-            <button onClick={handleConnect}>Connect</button>
-            <button onClick={handleCreateGame}>Create Game</button>
-            <button onClick={handleUpdateLobbies}>Update Lobbies</button>
+
+            {
+                isConnected ?
+                    <h3 className={"mt-2"}>
+                        Welcome, <span style={{color: "#612283"}}>{playerName}</span>
+                    </h3>
+                    :
+                    <Connection
+                        setPlayerName={setPlayerName}
+                        handleConnect={handleConnect}
+                        handleCreateGame={handleCreateGame}
+                        handleUpdateLobbies={handleUpdateLobbies}
+                    />
+            }
+
+
 
             <div>
                 Lobbies

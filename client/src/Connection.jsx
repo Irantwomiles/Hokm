@@ -13,14 +13,11 @@ function Connection({setPlayerName, handleConnect, handleCreateGame, handleUpdat
                         <Button variant={"one"}
                                 onClick={handleConnect}
                         >
-                            Connect
+                            Start Playing
                         </Button>
                     </InputGroup>
                 </Form.Group>
             </Form>
-
-            <button onClick={handleCreateGame}>Create Game</button>
-            <button onClick={handleUpdateLobbies}>Update Lobbies</button>
         </>
     )
 }

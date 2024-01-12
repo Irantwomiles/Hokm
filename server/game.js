@@ -342,6 +342,7 @@ export default class Game {
             cardsDown: this.cardsDown,
             teamOne: [p1, p2],
             teamTwo: [p3, p4],
+            allPlayers: [p1, p2, p3, p4]
         }
     }
 

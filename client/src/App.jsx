@@ -2,6 +2,8 @@ import {useEffect, useState} from 'react'
 import {socket} from "./socket.js";
 import './App.scss';
 import Connection from "./Connection.jsx";
+import InfoBar from "./InfoBar.jsx";
+import Lobbies from "./Lobbies.jsx";
 
 function App() {
     const [lobbies, setLobbies] = useState([]);
@@ -17,7 +19,6 @@ function App() {
 
     const handleDisconnect = () => {
         socket.disconnect();
-        console.log("disconnected");
     }
 
     const handleUpdateLobbies = () => {
@@ -48,6 +49,7 @@ function App() {
 
         function updateLobbies(lobbies) {
             setLobbies(lobbies);
+            console.log(lobbies);
         }
 
         function updateGameState(game) {
@@ -87,33 +89,28 @@ function App() {
 
             {
                 isConnected ?
-                    <h3 className={"mt-2"}>
-                        Welcome, <span style={{color: "#612283"}}>{playerName}</span>
-                    </h3>
+
+                    <InfoBar
+                        playerName={playerName}
+                        handleCreateGame={handleCreateGame}
+                        handleUpdateLobbies={handleUpdateLobbies}
+                    />
+
+
                     :
                     <Connection
                         setPlayerName={setPlayerName}
                         handleConnect={handleConnect}
-                        handleCreateGame={handleCreateGame}
-                        handleUpdateLobbies={handleUpdateLobbies}
                     />
             }
 
-
-
-            <div>
-                Lobbies
-                {
-                    lobbies.map((l, index) => (
-                        <div key={index}>
-                            <span>{l.value.roomName}</span>
-                            <button onClick={() => handleJoinGame(l.id, playerName)}>Join</button>
-                        </div>
-                    ))
-                }
-            </div>
-
             <hr />
+
+            <Lobbies
+                isConnected={isConnected}
+                lobbies={lobbies}
+                handleJoinGame={handleJoinGame}
+            />
 
             <div>Your ID: {isConnected ? socket.id : 'Not connected'}</div>
 

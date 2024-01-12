@@ -15,7 +15,7 @@ io.on('connection', (socket) => {
     })
 
     socket.on('get-lobbies', () => {
-        socket.emit('lobbies', Array.from(gameManager.games, ([id, value]) => ({id, value})));
+        socket.emit('lobbies', Array.from(gameManager.games, ([id, value]) => ({id, value: value.getGameState()})));
     })
 
     socket.on('create-room', ({playerName}) => {

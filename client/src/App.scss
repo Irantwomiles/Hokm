@@ -8,6 +8,8 @@ $purple-2: #E1E6F7;
 $purple-3: #8F9EE2;
 $purple-4: #612283;
 
+$gray-1: #0C0F1A;
+
 * {
   font-family: 'Rubik', sans-serif;
   background-color: $purple-1;
@@ -49,4 +51,9 @@ $purple-4: #612283;
   margin-right: 0.5rem;
   border-radius: 0.25rem;
   padding: 4rem 2rem;
+}
+
+.lobby {
+  background-color: $gray-1;
+  border-radius: 0.5rem;
 }

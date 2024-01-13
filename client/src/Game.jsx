@@ -1,4 +1,4 @@
-import Button from "react-bootstrap/Button";
+import * as CardSVG from "./SvgAssets.js";
 
 function Game({game}) {
     return (
@@ -26,14 +26,14 @@ function Game({game}) {
                             <div className={"d-flex flex-grow-1"}>
                                 <div className={"d-flex flex-column align-items-center justify-content-center flex-grow-1"}>
                                     <div className={"card-item card-outline"}>
-                                        <img src={"https://tekeye.uk/playing_cards/images/svg_playing_cards/fronts/clubs_king.svg"}  alt={"card"}/>
+                                        <img src={CardSVG.Clubs11}  alt={"card"}/>
                                     </div>
                                 </div>
 
                                 <div className={"d-flex flex-column align-items-center flex-grow-1"}>
                                     <div>
                                         <div className={"card-item card-outline"}>
-                                            card
+                                            <img src={CardSVG.Diamonds9}  alt={"card"}/>
                                         </div>
                                     </div>
 
@@ -41,7 +41,7 @@ function Game({game}) {
 
                                     <div>
                                         <div className={"card-item card-outline"}>
-                                            card
+                                            <img src={CardSVG.ClubsThree}  alt={"card"}/>
                                         </div>
                                     </div>
 
@@ -49,7 +49,7 @@ function Game({game}) {
 
                                 <div className={"d-flex flex-column justify-content-center align-items-center flex-grow-1"}>
                                     <div className={"card-item card-outline"}>
-                                        card
+                                        <img src={CardSVG.Spades14}  alt={"card"}/>
                                     </div>
                                 </div>
 

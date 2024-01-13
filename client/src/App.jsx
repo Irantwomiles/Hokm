@@ -97,7 +97,6 @@ function App() {
                         handleUpdateLobbies={handleUpdateLobbies}
                     />
 
-
                     :
                     <Connection
                         setPlayerName={setPlayerName}
@@ -106,10 +105,6 @@ function App() {
             }
 
             <hr />
-
-            <Game
-                game={game}
-            />
 
             {
                 game === null ?
@@ -122,6 +117,8 @@ function App() {
                     :
                     <Game
                         game={game}
+                        cards={cards}
+                        socket={socket}
                     />
             }
 

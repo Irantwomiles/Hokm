@@ -48,14 +48,14 @@ io.on('connection', (socket) => {
         game.handleSelectHokm(socket.id, suit);
     })
 
-    socket.on('place-card', ({gameId, playerId, cardId}) => {
+    socket.on('place-card', ({gameId, cardId}) => {
         const game = gameManager.getGame(gameId);
         if(!game) {
             console.log(`[Server] place-card could not find game with id ${gameId}`);
             return;
         }
 
-        game.placeDownCard(playerId, cardId);
+        game.placeDownCard(socket.id, cardId);
     })
 
     console.log(`${socket.id} a user connected`);

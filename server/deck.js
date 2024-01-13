@@ -3,7 +3,7 @@ import {v4 as uuid} from "uuid";
 export default class Deck {
     constructor() {
 
-        const suits = ['HEART', 'SPADE', 'CLOVER', 'DIAMOND'];
+        const suits = ['Hearts', 'Spades', 'Clover', 'Diamonds'];
         this.cards = [];
 
         for(const suit of suits) {

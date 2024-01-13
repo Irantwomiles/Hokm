@@ -56,10 +56,18 @@ $gray-1: #14182a;
     width: 8.5rem;
     object-fit: cover;
   }
+
+  &:hover {
+    z-index: 1000;
+  }
 }
 
 .card-outline {
   border: 1px dashed white;
+}
+
+.overlap-margin {
+  margin-left: -6rem;
 }
 
 .lobby {

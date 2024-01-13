@@ -1,6 +1,6 @@
 import Button from "react-bootstrap/Button";
 
-function Lobbies({lobbies, isConnected, handleJoinGame}) {
+function Lobbies({lobbies, isConnected, handleJoinGame, playerName}) {
     return (
         <>
             <div>

@@ -8,7 +8,7 @@ $purple-2: #E1E6F7;
 $purple-3: #8F9EE2;
 $purple-4: #612283;
 
-$gray-1: #0C0F1A;
+$gray-1: #14182a;
 
 * {
   font-family: 'Rubik', sans-serif;
@@ -46,11 +46,20 @@ $gray-1: #0C0F1A;
   align-items: center;
 }
 
-.card {
-  border: 1px solid white;
-  margin-right: 0.5rem;
-  border-radius: 0.25rem;
-  padding: 4rem 2rem;
+.card-item {
+  border-radius: 0.5rem;
+  height: 12rem;
+  width: 8.5rem;
+
+  img {
+    height: 12rem;
+    width: 8.5rem;
+    object-fit: cover;
+  }
+}
+
+.card-outline {
+  border: 1px dashed white;
 }
 
 .lobby {

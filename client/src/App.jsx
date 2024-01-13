@@ -4,6 +4,7 @@ import './App.scss';
 import Connection from "./Connection.jsx";
 import InfoBar from "./InfoBar.jsx";
 import Lobbies from "./Lobbies.jsx";
+import Game from "./Game.jsx";
 
 function App() {
     const [lobbies, setLobbies] = useState([]);
@@ -106,11 +107,25 @@ function App() {
 
             <hr />
 
-            <Lobbies
-                isConnected={isConnected}
-                lobbies={lobbies}
-                handleJoinGame={handleJoinGame}
+            <Game
+                game={game}
             />
+
+            {
+                game === null ?
+                    <Lobbies
+                        isConnected={isConnected}
+                        lobbies={lobbies}
+                        handleJoinGame={handleJoinGame}
+                        playerName={playerName}
+                    />
+                    :
+                    <Game
+                        game={game}
+                    />
+            }
+
+
 
             <div>Your ID: {isConnected ? socket.id : 'Not connected'}</div>
 

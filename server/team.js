@@ -36,4 +36,18 @@ export default class Team {
         return this.playerOne !== null && this.playerTwo !== null;
     }
 
+    removePlayer(playerId) {
+        if(this.playerOne !== null && this.playerOne.id === playerId) {
+            this.playerOne = null;
+            return true;
+        }
+
+        if(this.playerTwo !== null && this.playerTwo.id === playerId) {
+            this.playerTwo = null;
+            return true;
+        }
+
+        return false;
+    }
+
 }

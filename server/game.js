@@ -57,6 +57,32 @@ export default class Game {
         return false;
     }
 
+    removePlayer(socketId) {
+        if(!this.isPlayerInLobby(socketId)) {
+            return;
+        }
+
+        const team = this.getPlayerTeam(socketId);
+        if(team === null) return;
+
+        team.removePlayer(socketId);
+        this.updateGameState();
+    }
+
+    isPlayerInLobby(socketId) {
+        for(const p of this.getPlayers()) {
+            if(p === null) continue;
+            if(p.id !== socketId) continue;
+
+            const team = this.getPlayerTeam(socketId);
+            if(team === null) continue;
+
+            return true;
+        }
+
+        return false;
+    }
+
     startGame() {
 
         if(this.gameState !== 'WAITING') {

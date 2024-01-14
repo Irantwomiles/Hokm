@@ -3,6 +3,12 @@ import Button from "react-bootstrap/Button";
 
 function Game({game, cards, socket}) {
 
+    if(game === null) {
+        return (
+            <div>try refreshing your page</div>
+        )
+    }
+
     const p1 = game.teamOne[0];
     const p2 = game.teamOne[1];
     const p3 = game.teamTwo[0];

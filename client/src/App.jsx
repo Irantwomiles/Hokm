@@ -66,6 +66,13 @@ function App() {
             console.log('Updated cards:', cards);
         }
 
+        function handleGameEnd() {
+            setCards([]);
+            setGame(null);
+
+            console.log("Game ended");
+        }
+
         socket.on('connect', onConnect);
         socket.on('disconnect', onDisconnect);
         socket.on('lobbies', updateLobbies);
@@ -73,6 +80,7 @@ function App() {
         socket.on('update-game-state', updateGameState);
         socket.on('join-room-response', updateGameState);
         socket.on('update-player-cards', updatePlayerCards);
+        socket.on('game-end', handleGameEnd);
 
         return () => {
             handleDisconnect();
@@ -84,6 +92,7 @@ function App() {
             socket.off('update-game-state', updateGameState);
             socket.off('join-room-response', updateGameState);
             socket.off('update-player-cards', updatePlayerCards);
+            socket.off('game-end', handleGameEnd);
         }
 
     }, []);

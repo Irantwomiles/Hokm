@@ -71,6 +71,20 @@ export default class GameManager {
         return game;
     }
 
+    endGame(gameId) {
+        const game = this.getGame(gameId);
+        if(game === null) {
+            return;
+        }
+
+        for(const p of game.getPlayers()) {
+            if(p === null) continue;
+            this.players.delete(p.id);
+        }
+
+        this.games.delete(game.id);
+    }
+
     getGame(id) {
         if(this.games.has(id)) return this.games.get(id);
         return null;

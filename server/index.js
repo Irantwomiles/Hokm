@@ -12,10 +12,32 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`socket ${socket.id} disconnected`);
-        /*const game = gameManager.getGame(socket.id);
+
+        const gameId = gameManager.players.get(socket.id);
+        if(!gameId) return;
+
+        const game = gameManager.getGame(gameId);
         if(game === null) return;
 
-        game.removePlayer(socket.id);*/
+        game.removePlayer(socket.id);
+
+        gameManager.players.delete(socket.id);
+
+        if(game.gameState !== 'WAITING') {
+            io.to(game.id).emit('game-end');
+            gameManager.endGame(game.id);
+            console.log("Deleted game, player left mid game");
+            return;
+        }
+
+
+        if(game.getPlayers().filter(p => p !== null).length === 0) {
+            gameManager.endGame(game.id);
+            console.log("Deleted game, no players left");
+            return;
+        }
+
+        console.log("just removed player from game");
     })
 
     socket.on('get-lobbies', () => {
@@ -28,8 +50,7 @@ io.on('connection', (socket) => {
     });
 
     socket.on('join-room', async ({roomId, playerName}) => {
-        const game = await gameManager.joinGame(io, socket, roomId, {playerId: socket.id, playerName: playerName});
-        console.log(roomId, playerName);
+        await gameManager.joinGame(io, socket, roomId, {playerId: socket.id, playerName: playerName});
     });
 
     socket.on('start-game', ({gameId}) => {

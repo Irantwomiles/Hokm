@@ -12,6 +12,8 @@ $gray-1: #14182a;
 
 $gold-1: #f8ce00;
 
+$green-1: #29b340;
+
 * {
   font-family: 'Rubik', sans-serif;
   color: $purple-2;
@@ -46,6 +48,11 @@ body {
   }
 }
 
+.board {
+  background-color: $green-1;
+  border-radius: 0.5rem;
+}
+
 .cards {
   display: flex;
   align-items: center;
@@ -62,8 +69,12 @@ body {
     object-fit: cover;
   }
 
+  transition: transform 200ms ease-in;
+
   &:hover {
     z-index: 1000;
+    transform: scale(1.05);
+    cursor: pointer;
   }
 }
 

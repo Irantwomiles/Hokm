@@ -21,6 +21,15 @@ function Game({game, cards, socket}) {
         return <img src={CardSVG[`${game.cardsDown[index].card.suit}${game.cardsDown[index].card.value}`]}  alt={"card"}/>;
     }
 
+    function hasPlacedCard(player) {
+        if(player === null) return false;
+        for(const c of game.cardsDown) {
+            if(c.playerId === player.id) return true;
+        }
+
+        return false;
+    }
+
     function getHakemName() {
 
         if(game.hakem === null) return 'Not yet selected';
@@ -94,24 +103,27 @@ function Game({game, cards, socket}) {
                         {game.roomName} - ({game.allPlayers.filter(p => p !== null).length}/4 players)
                     </h5>
 
-                    <div className={"ms-4"}>
-                        <div>Hakem <i className="fa-solid fa-crown" style={{color: "#f8ce00"}} /> is {getHakemName()} </div>
-                    </div>
-
-                    <div className={"ms-4"}>
-                        <div>Hokm {getHokm()} </div>
-                    </div>
-
                     <Button className={`ms-auto ${game.teamOne[0].id !== socket.id ? 'd-none' : ''} ${game.gameState !== 'WAITING' ? 'd-none' : ''}`} onClick={() => socket.emit('start-game', {gameId: game.id})}>Start Game</Button>
                 </div>
 
                 <hr />
 
-                <div>
+                <div className={"board p-2"}>
 
-                    <div>
-                        <div>Your Team: {getPlayerTeam(socket.id) === 'TEAM_ONE' ? game.teamOne.points : game.teamTwo.points}</div>
-                        <div>Other Team: {getPlayerTeam(socket.id) === 'TEAM_ONE' ? game.teamTwo.points : game.teamOne.points}</div>
+                    <div className={"d-flex align-items-center p-2 mb-2"} style={{backgroundColor: "#1f7c1d", borderRadius: "0.5rem"}}>
+                        <div>
+                            <div>Your Team: {getPlayerTeam(socket.id) === 'TEAM_ONE' ? game.teamOnePoints : game.teamTwoPoints}</div>
+                            <div>Other Team: {getPlayerTeam(socket.id) === 'TEAM_ONE' ? game.teamTwoPoints : game.teamOnePoints}</div>
+                        </div>
+
+                        <div className={"ms-auto"}>
+                            <div>Hakem <i className="fa-solid fa-crown" style={{color: "#f8ce00"}} /> is {getHakemName()} </div>
+                        </div>
+
+                        <div className={"ms-4"}>
+                            <div>Hokm {getHokm()} </div>
+                        </div>
+
                     </div>
 
                     <div>
@@ -146,7 +158,7 @@ function Game({game, cards, socket}) {
 
                             <div className={"d-flex flex-grow-1"}>
                                 <div className={"d-flex flex-column align-items-center justify-content-center flex-grow-1"}>
-                                    <div className={`card-item card-outline ${getPlacementTurn(p3)}`}>
+                                    <div className={`card-item ${hasPlacedCard(p3) ? '' : 'card-outline'} ${getPlacementTurn(p3)}`}>
                                         {p3 === null ?
                                             <></>
                                         :
@@ -157,7 +169,7 @@ function Game({game, cards, socket}) {
 
                                 <div className={"d-flex flex-column align-items-center flex-grow-1"}>
                                     <div>
-                                        <div className={`card-item card-outline ${getPlacementTurn(p1)}`}>
+                                        <div className={`card-item ${hasPlacedCard(p1) ? '' : 'card-outline'} ${getPlacementTurn(p1)}`}>
                                             {p1 === null ?
                                                 <></>
                                                 :
@@ -169,7 +181,7 @@ function Game({game, cards, socket}) {
                                     <div className={"py-4"}></div>
 
                                     <div>
-                                        <div className={`card-item card-outline ${getPlacementTurn(p2)}`}>
+                                        <div className={`card-item ${hasPlacedCard(p2) ? '' : 'card-outline'} ${getPlacementTurn(p2)}`}>
                                             {p2 === null ?
                                                 <></>
                                                 :
@@ -181,7 +193,7 @@ function Game({game, cards, socket}) {
                                 </div>
 
                                 <div className={"d-flex flex-column justify-content-center align-items-center flex-grow-1"}>
-                                    <div className={`card-item card-outline ${getPlacementTurn(p4)}`}>
+                                    <div className={`card-item ${hasPlacedCard(p4) ? '' : 'card-outline'} ${getPlacementTurn(p4)}`}>
                                         {p4 === null ?
                                             <></>
                                             :

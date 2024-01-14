@@ -47,6 +47,8 @@ function App() {
 
         function onDisconnect() {
             setIsConnected(false);
+            setGame(null);
+            setCards([]);
         }
 
         function updateLobbies(lobbies) {

@@ -12,6 +12,10 @@ io.on('connection', (socket) => {
 
     socket.on('disconnect', () => {
         console.log(`socket ${socket.id} disconnected`);
+        /*const game = gameManager.getGame(socket.id);
+        if(game === null) return;
+
+        game.removePlayer(socket.id);*/
     })
 
     socket.on('get-lobbies', () => {

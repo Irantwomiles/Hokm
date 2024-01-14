@@ -11,6 +11,7 @@ export {default as Clover11} from './assets/clubs_jack.svg';
 export {default as Clover12} from './assets/clubs_queen.svg';
 export {default as Clover13} from './assets/clubs_king.svg';
 export {default as Clover14} from './assets/clubs_ace.svg';
+export {default as CloverSuit}    from './assets/club.svg';
 
 export {default as Diamonds2}   from './assets/diamonds_2.svg';
 export {default as Diamonds3} from './assets/diamonds_3.svg';
@@ -25,6 +26,7 @@ export {default as Diamonds11}    from './assets/diamonds_jack.svg';
 export {default as Diamonds12}    from './assets/diamonds_queen.svg';
 export {default as Diamonds13}    from './assets/diamonds_king.svg';
 export {default as Diamonds14}    from './assets/diamonds_ace.svg';
+export {default as DiamondSuit}    from './assets/diamond.svg';
 
 export {default as Hearts2}   from './assets/hearts_2.svg';
 export {default as Hearts3} from './assets/hearts_3.svg';
@@ -39,6 +41,7 @@ export {default as Hearts11}    from './assets/hearts_jack.svg';
 export {default as Hearts12}    from './assets/hearts_queen.svg';
 export {default as Hearts13}    from './assets/hearts_king.svg';
 export {default as Hearts14}    from './assets/hearts_ace.svg';
+export {default as HeartSuit}    from './assets/heart.svg';
 
 export {default as Spades2}   from './assets/spades_2.svg';
 export {default as Spades3} from './assets/spades_3.svg';
@@ -53,3 +56,4 @@ export {default as Spades11}    from './assets/spades_jack.svg';
 export {default as Spades12}    from './assets/spades_queen.svg';
 export {default as Spades13}    from './assets/spades_king.svg';
 export {default as Spades14}    from './assets/spades_ace.svg';
+export {default as SpadeSuit}    from './assets/spade.svg';

@@ -76,3 +76,16 @@ $gold-1: #f8ce00;
   background-color: $gray-1;
   border-radius: 0.5rem;
 }
+
+.pulse-blue {
+  animation: pulse-animation 2s infinite;
+}
+
+@keyframes pulse-animation {
+  0% {
+    box-shadow: 0 0 0 0 rgba(0, 22, 255, 0.5);
+  }
+  100% {
+    box-shadow: 0 0 0 20px rgba(84, 116, 241, 0);
+  }
+}

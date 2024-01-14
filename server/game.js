@@ -79,16 +79,16 @@ export default class Game {
         let randomNumber = Math.floor(Math.random() * 4) + 1;
         switch(randomNumber) {
             case 1:
-                this.hakem = this.teamOne.playerOne;
+                this.hakem = this.teamOne.playerOne.getPlayerInfo();
                 break;
             case 2:
-                this.hakem = this.teamOne.playerTwo;
+                this.hakem = this.teamOne.playerTwo.getPlayerInfo();
                 break;
             case 3:
-                this.hakem = this.teamTwo.playerOne;
+                this.hakem = this.teamTwo.playerOne.getPlayerInfo();
                 break;
             case 4:
-                this.hakem = this.teamTwo.playerTwo;
+                this.hakem = this.teamTwo.playerTwo.getPlayerInfo();
                 break;
             default:
                 break;

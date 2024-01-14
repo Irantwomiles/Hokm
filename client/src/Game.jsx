@@ -22,9 +22,12 @@ function Game({game, cards, socket}) {
     }
 
     function getHakemName() {
+
+        if(game.hakem === null) return 'Not yet selected';
+
         for(const p of [p1, p2, p3, p4]) {
             if(p === null) continue;
-            if(game.hakem === p.id) {
+            if(game.hakem.id === p.id) {
                 return p.name;
             }
         }
@@ -32,7 +35,38 @@ function Game({game, cards, socket}) {
         return 'Not yet selected';
     }
 
+    function getHokm() {
 
+        if(game.hokm.length === 0) return 'Not yet selected';
+
+        switch (game.hokm.toLowerCase()) {
+            case 'heart': {
+                return <img style={{height: "1.5rem", width: "1.5rem"}} src={CardSVG.HeartSuit} alt={'heart suit'} />
+            }
+            case 'diamond': {
+                return <img style={{height: "1.5rem", width: "1.5rem"}}  src={CardSVG.DiamondSuit} alt={'diamond suit'} />
+            }
+            case 'clover': {
+                return <img style={{height: "1.5rem", width: "1.5rem"}}  src={CardSVG.CloverSuit} alt={'clover suit'} />
+            }
+            case 'spade': {
+                return <img style={{height: "1.5rem", width: "1.5rem"}}  src={CardSVG.SpadeSuit} alt={'spade suit'} />
+            }
+            default:
+                return 'Unknown suit, try again';
+        }
+    }
+
+    function getPlacementTurn(player) {
+
+        if(player === null) return '';
+
+        if(game.gameState !== 'PLACE_CARD') return '';
+
+        if(game.placementOrder[game.placementTurn] === player.id) return 'pulse-blue';
+
+        return '';
+    }
 
     return (
         <>
@@ -44,10 +78,14 @@ function Game({game, cards, socket}) {
                     </h5>
 
                     <div className={"ms-4"}>
-                        <div>The Hakem <i className="fa-solid fa-crown" style={{color: "#f8ce00"}} /> is {getHakemName()} </div>
+                        <div>Hakem <i className="fa-solid fa-crown" style={{color: "#f8ce00"}} /> is {getHakemName()} </div>
                     </div>
 
-                    <Button className={"ms-auto"} onClick={() => socket.emit('start-game', {gameId: game.id})}>Start Game</Button>
+                    <div className={"ms-4"}>
+                        <div>Hokm {getHokm()} </div>
+                    </div>
+
+                    <Button className={`ms-auto ${game.teamOne[0].id !== socket.id ? 'd-none' : ''} ${game.gameState !== 'WAITING' ? 'd-none' : ''}`} onClick={() => socket.emit('start-game', {gameId: game.id})}>Start Game</Button>
                 </div>
 
                 <hr />
@@ -55,15 +93,20 @@ function Game({game, cards, socket}) {
                 <div>
 
                     <div>
-                        <div>Your Team : </div>
-                        <div>Other </div>
+                        <div>Your Team: </div>
+                        <div>Other Team: </div>
                     </div>
 
                     <div>
                         <div className={"text-center"}>
                             {p1 === null ? 'Waiting...' :
                             <div>{p1.name}
-                                <i className={`fa-solid fa-crown ms-2 ${p1.id === game.hakem ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                {
+                                    game.hakem === null ?
+                                        ''
+                                        :
+                                        <i className={`fa-solid fa-crown ms-2 ${p1.id === game.hakem.id ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                }
                                 <span style={{color: "gray"}}>{socket.id === p1.id ? ' (You)' : ''}</span>
                             </div>}
                         </div>
@@ -73,7 +116,12 @@ function Game({game, cards, socket}) {
                             <div className={"d-flex flex-column justify-content-center align-items-center"}>
                                 {p3 === null ? 'Waiting...' :
                                     <div>{p3.name}
-                                        <i className={`fa-solid fa-crown ms-2 ${p3.id === game.hakem ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                        {
+                                            game.hakem === null ?
+                                                ''
+                                                :
+                                                <i className={`fa-solid fa-crown ms-2 ${p3.id === game.hakem.id ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                        }
                                         <span style={{color: "gray"}}>{socket.id === p3.id ? ' (You)' : ''}</span>
                                     </div>
                                 }
@@ -81,7 +129,7 @@ function Game({game, cards, socket}) {
 
                             <div className={"d-flex flex-grow-1"}>
                                 <div className={"d-flex flex-column align-items-center justify-content-center flex-grow-1"}>
-                                    <div className={"card-item card-outline"}>
+                                    <div className={`card-item card-outline ${getPlacementTurn(p3)}`}>
                                         {p3 === null ?
                                             <></>
                                         :
@@ -92,7 +140,7 @@ function Game({game, cards, socket}) {
 
                                 <div className={"d-flex flex-column align-items-center flex-grow-1"}>
                                     <div>
-                                        <div className={"card-item card-outline"}>
+                                        <div className={`card-item card-outline ${getPlacementTurn(p1)}`}>
                                             {p1 === null ?
                                                 <></>
                                                 :
@@ -104,7 +152,7 @@ function Game({game, cards, socket}) {
                                     <div className={"py-4"}></div>
 
                                     <div>
-                                        <div className={"card-item card-outline"}>
+                                        <div className={`card-item card-outline ${getPlacementTurn(p2)}`}>
                                             {p2 === null ?
                                                 <></>
                                                 :
@@ -116,7 +164,7 @@ function Game({game, cards, socket}) {
                                 </div>
 
                                 <div className={"d-flex flex-column justify-content-center align-items-center flex-grow-1"}>
-                                    <div className={"card-item card-outline"}>
+                                    <div className={`card-item card-outline ${getPlacementTurn(p4)}`}>
                                         {p4 === null ?
                                             <></>
                                             :
@@ -131,7 +179,12 @@ function Game({game, cards, socket}) {
                             <div className={"d-flex flex-column justify-content-center align-items-center"}>
                                 {p4 === null ? 'Waiting...' :
                                     <div>{p4.name}
-                                        <i className={`fa-solid fa-crown ms-2 ${p4.id === game.hakem ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                        {
+                                            game.hakem === null ?
+                                                ''
+                                                :
+                                                <i className={`fa-solid fa-crown ms-2 ${p4.id === game.hakem.id ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                        }
                                         <span style={{color: "gray"}}>{socket.id === p4.id ? ' (You)' : ''}</span>
                                     </div>
                                 }
@@ -142,7 +195,12 @@ function Game({game, cards, socket}) {
                         <div className={"text-center"}>
                             {p2 === null ? 'Waiting...' :
                                 <div>{p2.name}
-                                    <i className={`fa-solid fa-crown ms-2 ${p2.id === game.hakem ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                    {
+                                        game.hakem === null ?
+                                            ''
+                                            :
+                                            <i className={`fa-solid fa-crown ms-2 ${p2.id === game.hakem.id ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                    }
                                     <span style={{color: "gray"}}>{socket.id === p2.id ? ' (You)' : ''}</span>
                                 </div>
                             }

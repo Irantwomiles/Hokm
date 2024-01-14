@@ -63,14 +63,23 @@ io.on('connection', (socket) => {
         game.startGame();
     })
 
-    socket.on('select-hokm', ({gameId, suit}) => {
+    socket.on('select-hokm', ({suit}) => {
+
+        const gameId = gameManager.players.get(socket.id);
+        if(!gameId) return;
+
         const game = gameManager.getGame(gameId);
+        if(game === null) return;
+
         if(!game) {
             console.log(`[Server] select-hokm could not find game with id ${gameId}`);
             return;
         }
 
-        game.handleSelectHokm(socket.id, suit);
+        const s = getSuit(suit);
+        if(s.length === 0) return;
+
+        game.handleSelectHokm(socket.id, s);
     })
 
     socket.on('place-card', ({gameId, cardId}) => {
@@ -85,6 +94,21 @@ io.on('connection', (socket) => {
 
     console.log(`${socket.id} a user connected`);
 });
+
+function getSuit(suit) {
+    switch (suit) {
+        case 'Hearts':
+            return 'HEART';
+        case 'Spades':
+            return 'SPADE';
+        case 'Clover':
+            return 'CLOVER';
+        case 'Diamonds':
+            return 'DIAMOND';
+        default:
+            return '';
+    }
+}
 
 server.listen(PORT, () => {
     console.log(`listening on *:${PORT}`);

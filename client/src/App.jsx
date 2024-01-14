@@ -119,7 +119,7 @@ function App() {
             <hr />
 
             {
-                game === null ?
+                game === null || socket === null ?
                     <Lobbies
                         isConnected={isConnected}
                         lobbies={lobbies}

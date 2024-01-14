@@ -164,6 +164,11 @@ export default class Game {
             return;
         }
 
+        if(this.getPlayers().filter(p => p === null) !== 0) {
+            console.log(`[Server] not enough players to select hokm`);
+            return;
+        }
+
         this.hokm = suit;
 
         console.log(`[Server] Selected suit ${suit}`);

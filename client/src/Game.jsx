@@ -3,12 +3,6 @@ import Button from "react-bootstrap/Button";
 
 function Game({game, cards, socket}) {
 
-    if(game === null) {
-        return (
-            <div>try refreshing your page</div>
-        )
-    }
-
     const p1 = game.teamOne[0];
     const p2 = game.teamOne[1];
     const p3 = game.teamTwo[0];
@@ -102,6 +96,9 @@ function Game({game, cards, socket}) {
 
     return (
         <>
+
+            {game === null ? '' :
+
             <div>
 
                 <div className={"d-flex align-items-center"}>
@@ -245,21 +242,34 @@ function Game({game, cards, socket}) {
 
                     <h5>Your hand</h5>
                     <div className={"d-flex align-items-center"}>
+
                     {
-                        cards.filter(c => !c.placed).map((card, index) => (
-                            <div key={index} className={`card-item${index === 0 ? '' : ' overlap-margin'}`} onClick={() => socket.emit('place-card', {
-                                gameId: game.id,
-                                cardId: card.id
-                            })}>
-                                <img src={CardSVG[`${card.suit}${card.value}`]}  alt={`${card.suit}${card.value}`}/>
-                            </div>
-                        ))
+                        game.gameState === 'PICK_HOKM' ?
+                            cards.filter(c => !c.placed).map((card, index) => (
+                                <div key={index} className={`card-item${index === 0 ? '' : ' overlap-margin'}`} onClick={() => socket.emit('select-hokm', {
+                                    suit: card.suit
+                                })}>
+                                    <img src={CardSVG[`${card.suit}${card.value}`]}  alt={`${card.suit}${card.value}`}/>
+                                </div>
+                            ))
+                            :
+                            cards.filter(c => !c.placed).map((card, index) => (
+                                <div key={index} className={`card-item${index === 0 ? '' : ' overlap-margin'}`} onClick={() => socket.emit('place-card', {
+                                    gameId: game.id,
+                                    cardId: card.id
+                                })}>
+                                    <img src={CardSVG[`${card.suit}${card.value}`]}  alt={`${card.suit}${card.value}`}/>
+                                </div>
+                            ))
                     }
+
+
                     </div>
 
                 </div>
 
             </div>
+            }
         </>
     )
 }

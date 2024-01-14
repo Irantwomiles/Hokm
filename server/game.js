@@ -280,12 +280,19 @@ export default class Game {
 
             team.points++;
 
-            this.placementTurn = 0;
-            this.currentRoundSuit = null;
-            this.cardsDown = [];
-            this.setPlacementOrder(max.playerId);
-
+            this.gameState = 'BETWEEN_HANDS';
             this.updateGameState();
+
+            this.gameTimeout = setTimeout(() => {
+                this.placementTurn = 0;
+                this.currentRoundSuit = null;
+                this.cardsDown = [];
+                this.setPlacementOrder(max.playerId);
+
+                this.updateGameState();
+                this.gameState = 'PLACE_CARD';
+            }, 3000);
+
             return;
         }
 

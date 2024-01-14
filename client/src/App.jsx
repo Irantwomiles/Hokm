@@ -5,6 +5,7 @@ import Connection from "./Connection.jsx";
 import InfoBar from "./InfoBar.jsx";
 import Lobbies from "./Lobbies.jsx";
 import Game from "./Game.jsx";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 
 function App() {
     const [lobbies, setLobbies] = useState([]);
@@ -122,76 +123,7 @@ function App() {
                     />
             }
 
-
-
             <div>Your ID: {isConnected ? socket.id : 'Not connected'}</div>
-
-            <hr />
-
-            {
-                game === null ?
-                    <div>Not in a game</div>
-                    :
-                    <>
-                        <div> Game Info: {game.id} {game.gameState}</div>
-                        <div> Hakem: {game.hakem === null ? 'Not selected' : game.hakem.id}</div>
-                        <div> Hokm: {game.hokm}</div>
-
-                        <button onClick={() => socket.emit('start-game', {gameId: game.id})}>Start Game</button>
-
-                        <hr />
-
-                        <div style={{marginBottom: "1rem"}}>
-                            <div>Team One: {game.teamOne.points}</div>
-                            <div>
-                                <div>Player1</div>
-                                <div>ID: {game.teamOne[0] === null ? 'Empty' : game.teamOne[0].id}</div>
-                            </div>
-
-                            <div>
-                                <div>Player2</div>
-                                <div>ID: {game.teamOne[1] === null ? 'Empty' : game.teamOne[1].id}</div>
-                            </div>
-
-                        </div>
-
-                        <div>
-                            <div>Team Two: {game.teamTwo.points}</div>
-                            <div>
-                                <div>Player1</div>
-                                <div>ID: {game.teamTwo[0] === null ? 'Empty' : game.teamTwo[0].id}</div>
-                            </div>
-
-                            <div>
-                                <div>Player2</div>
-                                <div>ID: {game.teamTwo[1] === null ? 'Empty' : game.teamTwo[1].id}</div>
-                            </div>
-                        </div>
-                    </>
-
-            }
-
-            {
-                 <div className={"cards"}>
-                    {
-                        cards ?
-                            cards.filter(c => !c.placed).map((card, index) => (
-                                <div className={"card"} key={index}>
-                                    <div>{card.suit}</div>
-                                    <div>{card.value}</div>
-                                    <button onClick={() => socket.emit('place-card', {
-                                        gameId: game.id,
-                                        playerId: socket.id,
-                                        cardId: card.id
-                                    })}>Place</button>
-                                </div>
-                            ))
-                            :
-                            ''
-                    }
-                </div>
-            }
-
 
         </>
     )

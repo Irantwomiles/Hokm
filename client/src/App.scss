@@ -14,8 +14,11 @@ $gold-1: #f8ce00;
 
 * {
   font-family: 'Rubik', sans-serif;
-  background-color: $purple-1;
   color: $purple-2;
+}
+
+body {
+  background-color: $purple-1;
 }
 
 .connect-form {

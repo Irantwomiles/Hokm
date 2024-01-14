@@ -41,4 +41,23 @@ class Card {
         this.value = value;
         this.placed = false;
     }
+
+    /**
+     * returns the correct suit type for the server type checking
+     * @returns {string}
+     */
+    getSuit() {
+        switch (this.suit) {
+            case 'Hearts':
+                return 'HEART';
+            case 'Spades':
+                return 'SPADE';
+            case 'Clover':
+                return 'CLOVER';
+            case 'Diamonds':
+                return 'DIAMOND';
+            default:
+                return '';
+        }
+    }
 }

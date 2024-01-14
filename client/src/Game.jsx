@@ -59,13 +59,30 @@ function Game({game, cards, socket}) {
 
     function getPlacementTurn(player) {
 
-        if(player === null) return '';
+        if(player === null) {
+            console.log("player null");
+            return '';
+        }
 
         if(game.gameState !== 'PLACE_CARD') return '';
 
         if(game.placementOrder[game.placementTurn] === player.id) return 'pulse-blue';
 
         return '';
+    }
+
+    function getPlayerTeam(id) {
+        for(const p of [p1, p2]) {
+            if(p === null) continue;
+            if(p.id === id) return 'TEAM_ONE';
+        }
+
+        for(const p of [p3, p4]) {
+            if(p === null) continue;
+            if(p.id === id) return 'TEAM_TWO';
+        }
+
+        return 'UNKNOWN';
     }
 
     return (
@@ -93,8 +110,8 @@ function Game({game, cards, socket}) {
                 <div>
 
                     <div>
-                        <div>Your Team: </div>
-                        <div>Other Team: </div>
+                        <div>Your Team: {getPlayerTeam(socket.id) === 'TEAM_ONE' ? game.teamOne.points : game.teamTwo.points}</div>
+                        <div>Other Team: {getPlayerTeam(socket.id) === 'TEAM_ONE' ? game.teamTwo.points : game.teamOne.points}</div>
                     </div>
 
                     <div>
@@ -228,5 +245,6 @@ function Game({game, cards, socket}) {
         </>
     )
 }
+
 
 export default Game;

@@ -178,11 +178,11 @@ export default class Game {
 
         switch(id) {
             case this.teamOne.playerOne.id: {
-                this.placementOrder = [this.teamOne.playerOne.id, this.teamTwo.playerOne.id, this.teamOne.playerTwo.id, this.teamTwo.playerTwo.id];
+                this.placementOrder = [this.teamOne.playerOne.id, this.teamTwo.playerTwo.id, this.teamOne.playerTwo.id, this.teamTwo.playerOne.id];
                 break;
             }
             case this.teamOne.playerTwo.id: {
-                this.placementOrder = [this.teamOne.playerTwo.id, this.teamTwo.playerTwo.id, this.teamOne.playerOne.id, this.teamTwo.playerOne.id];
+                this.placementOrder = [this.teamOne.playerTwo.id, this.teamTwo.playerOne.id, this.teamOne.playerOne.id, this.teamTwo.playerTwo.id];
                 break;
             }
             case this.teamTwo.playerOne.id: {
@@ -259,10 +259,13 @@ export default class Game {
             //calculate who won the round
             let max = null;
             for(const c of this.cardsDown) {
+
+                console.log(`${c.card.suit} ${c.card.value}`);
+
                 if(max === null) {
                     max = c;
                 } else {
-                    if(c.card.suit !== this.currentRoundSuit && c.card.suit !== this.hokm) continue;
+                    if(c.card.suit !== this.currentRoundSuit && c.card.getSuit() !== this.hokm) continue;
 
                     const value = c.card.suit === this.hokm ? c.card.value * 100 : c.card.value;
 
@@ -271,6 +274,8 @@ export default class Game {
                     }
                 }
             }
+
+            console.log(`${max.card.suit} ${max.card.value}`);
 
             const team = this.getPlayerTeam(max.playerId);
             if(team === null) {
@@ -288,9 +293,9 @@ export default class Game {
                 this.currentRoundSuit = null;
                 this.cardsDown = [];
                 this.setPlacementOrder(max.playerId);
+                this.gameState = 'PLACE_CARD';
 
                 this.updateGameState();
-                this.gameState = 'PLACE_CARD';
             }, 3000);
 
             return;
@@ -349,7 +354,9 @@ export default class Game {
             cardsDown: this.cardsDown,
             teamOne: [p1, p2],
             teamTwo: [p3, p4],
-            allPlayers: [p1, p2, p3, p4]
+            allPlayers: [p1, p2, p3, p4],
+            teamOnePoints: this.teamOne.points,
+            teamTwoPoints: this.teamTwo.points
         }
     }
 

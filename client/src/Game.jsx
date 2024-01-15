@@ -130,7 +130,7 @@ function Game({game, cards, socket}) {
                     </div>
 
                     <div>
-                        <div className={"text-center"}>
+                        <div className={"text-center d-none-md-down"}>
                             {p1 === null ? 'Waiting...' :
                             <div>{p1.name}
                                 {
@@ -145,7 +145,7 @@ function Game({game, cards, socket}) {
 
                         <div className={"d-flex"}>
 
-                            <div className={"d-flex flex-column justify-content-center align-items-center"}>
+                            <div className={"d-flex flex-column justify-content-center align-items-center d-none-md-down"}>
                                 {p3 === null ? 'Waiting...' :
                                     <div>{p3.name}
                                         {
@@ -161,34 +161,80 @@ function Game({game, cards, socket}) {
 
                             <div className={"d-flex flex-grow-1"}>
                                 <div className={"d-flex flex-column align-items-center justify-content-center flex-grow-1"}>
-                                    <div className={`card-item ${hasPlacedCard(p3) ? '' : 'card-outline'} ${getPlacementTurn(p3)}`}>
+                                    <div className={`card-item d-flex align-items-center justify-content-center ${hasPlacedCard(p3) ? '' : 'card-outline'} ${getPlacementTurn(p3)}`}>
                                         {p3 === null ?
                                             <></>
                                         :
                                             getCardPlacedDown(p3.id)
+                                        }
+
+                                        {p3 === null ? <span className={"d-none-md-up"}>Waiting...</span> :
+                                            <div className={"d-none-md-up"} style={{overflow: "hidden", maxWidth: "4.5rem"}}>
+                                                <div className={"card-user-info text-center"}>{p3.name}</div>
+                                                {
+                                                    game.hakem === null ?
+                                                        ''
+                                                        :
+                                                        <div className={"text-center"}>
+                                                            <i className={`fa-solid fa-crown ${p3.id === game.hakem.id ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                                        </div>
+                                                }
+                                                <div className={"text-center"} style={{color: "gray", fontSize: "0.85rem"}}>{socket.id === p3.id ? ' (You)' : ''}</div>
+                                            </div>
                                         }
                                     </div>
                                 </div>
 
                                 <div className={"d-flex flex-column align-items-center flex-grow-1"}>
                                     <div>
-                                        <div className={`card-item ${hasPlacedCard(p1) ? '' : 'card-outline'} ${getPlacementTurn(p1)}`}>
+                                        <div className={`card-item d-flex align-items-center justify-content-center ${hasPlacedCard(p1) ? '' : 'card-outline'} ${getPlacementTurn(p1)}`}>
                                             {p1 === null ?
                                                 <></>
                                                 :
                                                 getCardPlacedDown(p1.id)
                                             }
+
+                                            {p1 === null ? <span className={"d-none-md-up"}>Waiting...</span> :
+                                                <div className={"d-none-md-up"} style={{overflow: "hidden", maxWidth: "4.5rem"}}>
+                                                    <div className={"card-user-info text-center"}>{p1.name}</div>
+                                                    {
+                                                        game.hakem === null ?
+                                                            ''
+                                                            :
+                                                            <div className={"text-center"}>
+                                                                <i className={`fa-solid fa-crown ${p1.id === game.hakem.id ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                                            </div>
+                                                    }
+                                                    <div className={"text-center"} style={{color: "gray", fontSize: "0.85rem"}}>{socket.id === p1.id ? ' (You)' : ''}</div>
+                                                </div>
+                                            }
+
                                         </div>
                                     </div>
 
                                     <div className={"py-4"}></div>
 
                                     <div>
-                                        <div className={`card-item ${hasPlacedCard(p2) ? '' : 'card-outline'} ${getPlacementTurn(p2)}`}>
+                                        <div className={`card-item d-flex align-items-center justify-content-center ${hasPlacedCard(p2) ? '' : 'card-outline'} ${getPlacementTurn(p2)}`}>
                                             {p2 === null ?
                                                 <></>
                                                 :
                                                 getCardPlacedDown(p2.id)
+                                            }
+
+                                            {p2 === null ? <span className={"d-none-md-up"}>Waiting...</span> :
+                                                <div className={"d-none-md-up"} style={{overflow: "hidden", maxWidth: "4.5rem"}}>
+                                                    <div className={"card-user-info text-center"}>{p2.name}</div>
+                                                    {
+                                                        game.hakem === null ?
+                                                            ''
+                                                            :
+                                                            <div className={"text-center"}>
+                                                                <i className={`fa-solid fa-crown ${p2.id === game.hakem.id ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                                            </div>
+                                                    }
+                                                    <div className={"text-center"} style={{color: "gray", fontSize: "0.85rem"}}>{socket.id === p2.id ? ' (You)' : ''}</div>
+                                                </div>
                                             }
                                         </div>
                                     </div>
@@ -196,11 +242,26 @@ function Game({game, cards, socket}) {
                                 </div>
 
                                 <div className={"d-flex flex-column justify-content-center align-items-center flex-grow-1"}>
-                                    <div className={`card-item ${hasPlacedCard(p4) ? '' : 'card-outline'} ${getPlacementTurn(p4)}`}>
+                                    <div className={`card-item d-flex align-items-center justify-content-center ${hasPlacedCard(p4) ? '' : 'card-outline'} ${getPlacementTurn(p4)}`}>
                                         {p4 === null ?
                                             <></>
                                             :
                                             getCardPlacedDown(p4.id)
+                                        }
+
+                                        {p4 === null ? <span className={"d-none-md-up"}>Waiting...</span> :
+                                            <div className={"d-none-md-up"} style={{overflow: "hidden", maxWidth: "4.5rem"}}>
+                                                <div className={"card-user-info text-center"}>{p4.name}</div>
+                                                {
+                                                    game.hakem === null ?
+                                                        ''
+                                                        :
+                                                        <div className={"text-center"}>
+                                                            <i className={`fa-solid fa-crown ${p4.id === game.hakem.id ? '' : 'd-none'}`} style={{color: "#f8ce00"}} />
+                                                        </div>
+                                                }
+                                                <div className={"text-center"} style={{color: "gray", fontSize: "0.85rem"}}>{socket.id === p4.id ? ' (You)' : ''}</div>
+                                            </div>
                                         }
                                     </div>
                                 </div>
@@ -208,7 +269,7 @@ function Game({game, cards, socket}) {
                             </div>
 
 
-                            <div className={"d-flex flex-column justify-content-center align-items-center"}>
+                            <div className={"d-flex flex-column justify-content-center align-items-center d-none-md-down"}>
                                 {p4 === null ? 'Waiting...' :
                                     <div>{p4.name}
                                         {
@@ -224,7 +285,7 @@ function Game({game, cards, socket}) {
 
                         </div>
 
-                        <div className={"text-center"}>
+                        <div className={"text-center d-none-md-down"}>
                             {p2 === null ? 'Waiting...' :
                                 <div>{p2.name}
                                     {

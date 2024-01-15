@@ -164,7 +164,7 @@ export default class Game {
             return;
         }
 
-        if(this.getPlayers().filter(p => p === null) !== 0) {
+        if(this.getPlayers().filter(p => p === null).length !== 0) {
             console.log(`[Server] not enough players to select hokm`);
             return;
         }

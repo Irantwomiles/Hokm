@@ -66,10 +66,16 @@ io.on('connection', (socket) => {
     socket.on('select-hokm', ({suit}) => {
 
         const gameId = gameManager.players.get(socket.id);
-        if(!gameId) return;
+        if(!gameId) {
+            console.log("could not find gameId select-hokm");
+            return;
+        }
 
         const game = gameManager.getGame(gameId);
-        if(game === null) return;
+        if(game === null) {
+            console.log("could not find game select-hokm");
+            return;
+        }
 
         if(!game) {
             console.log(`[Server] select-hokm could not find game with id ${gameId}`);
@@ -77,7 +83,10 @@ io.on('connection', (socket) => {
         }
 
         const s = getSuit(suit);
-        if(s.length === 0) return;
+        if(s.length === 0) {
+            console.log("could not find suit select-hokm", s);
+            return;
+        }
 
         game.handleSelectHokm(socket.id, s);
     })

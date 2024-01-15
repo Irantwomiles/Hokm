@@ -43,6 +43,7 @@ function App() {
     useEffect(() => {
         function onConnect() {
             setIsConnected(true);
+            socket.emit('get-lobbies');
         }
 
         function onDisconnect() {
@@ -53,7 +54,6 @@ function App() {
 
         function updateLobbies(lobbies) {
             setLobbies(lobbies);
-            console.log(lobbies);
         }
 
         function updateGameState(game) {

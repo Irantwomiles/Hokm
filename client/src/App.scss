@@ -103,3 +103,33 @@ body {
     box-shadow: 0 0 0 20px rgba(84, 116, 241, 0);
   }
 }
+
+.card-user-info {
+  text-wrap: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+@include media-breakpoint-up(md) {
+  .d-none-md-up {
+    display: none !important;
+  }
+}
+
+@include media-breakpoint-down(md) {
+
+  .d-none-md-down {
+    display: none !important;
+  }
+
+  .card-item {
+    height: 8rem;
+    width: 5.5rem;
+
+    img {
+      height: 8rem;
+      width: 5.5rem;
+      object-fit: cover;
+    }
+  }
+}

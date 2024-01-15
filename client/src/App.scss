@@ -110,6 +110,11 @@ body {
   text-overflow: ellipsis;
 }
 
+.game-info {
+  display: flex;
+  align-items: center;
+}
+
 @include media-breakpoint-up(md) {
   .d-none-md-up {
     display: none !important;
@@ -117,6 +122,19 @@ body {
 }
 
 @include media-breakpoint-down(md) {
+
+  .game-info {
+    display: block;
+
+    div {
+      margin-left: 0;
+    }
+
+  }
+
+  .overlap-margin {
+    margin-left: -2rem;
+  }
 
   .d-none-md-down {
     display: none !important;

@@ -119,12 +119,14 @@ function Game({game, cards, socket}) {
                             <div>Other Team: {getPlayerTeam(socket.id) === 'TEAM_ONE' ? game.teamTwoPoints : game.teamOnePoints}</div>
                         </div>
 
-                        <div className={"ms-auto"}>
-                            <div>Hakem <i className="fa-solid fa-crown" style={{color: "#f8ce00"}} /> is {getHakemName()} </div>
-                        </div>
+                        <div className={"game-info"}>
+                            <div className={"ms-auto"}>
+                                <div>Hakem <i className="fa-solid fa-crown" style={{color: "#f8ce00"}} /> is {getHakemName()} </div>
+                            </div>
 
-                        <div className={"ms-4"}>
-                            <div>Hokm {getHokm()} </div>
+                            <div className={"ms-4"}>
+                                <div>Hokm {getHokm()} </div>
+                            </div>
                         </div>
 
                     </div>
@@ -302,7 +304,7 @@ function Game({game, cards, socket}) {
                     </div>
 
                     <h5>Your hand</h5>
-                    <div className={"d-flex align-items-center"}>
+                    <div className={"d-flex align-items-center flex-wrap"}>
 
                     {
                         game.gameState === 'PICK_HOKM' ?

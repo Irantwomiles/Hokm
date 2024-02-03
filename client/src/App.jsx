@@ -162,6 +162,8 @@ function App() {
         socket.on('update-player-cards', updatePlayerCards);
         socket.on('game-end', handleGameEnd);
 
+
+
         return () => {
             handleDisconnect();
 

@@ -1,7 +1,11 @@
 import * as CardSVG from "./SvgAssets.js";
 import Button from "react-bootstrap/Button";
+import {useRef, useState} from "react";
 
 function Game({game, cards, socket}) {
+
+    // const selectedCard = useRef(null);
+    const [selectedCard, setSelectedCard] = useState(null);
 
     const p1 = game.teamOne[0];
     const p2 = game.teamOne[1];
@@ -94,6 +98,43 @@ function Game({game, cards, socket}) {
         return 'UNKNOWN';
     }
 
+    function handlePlaceCard(event, gameId, cardId) {
+        event.stopPropagation();
+
+        // only do the double click selection if the window is below the pixel threshold
+        if(window.innerWidth <= 769) {
+            if(selectedCard === null) {
+                setSelectedCard({
+                    gameId,
+                    cardId
+                })
+                return;
+            }
+
+            if(selectedCard.gameId !== gameId || selectedCard.cardId !== cardId) {
+                setSelectedCard({
+                    gameId,
+                    cardId
+                })
+                return;
+            }
+
+            socket.emit('place-card', {
+                gameId,
+                cardId
+            });
+
+            setSelectedCard(null);
+            return;
+        }
+
+        socket.emit('place-card', {
+            gameId,
+            cardId
+        });
+
+    }
+
     return (
         <>
 
@@ -111,7 +152,10 @@ function Game({game, cards, socket}) {
 
                 <hr />
 
-                <div className={"board p-2"}>
+                <div className={"board p-2"} onClick={() => {
+                    setSelectedCard(null);
+                    console.log("set card null");
+                }}>
 
                     <div className={"d-flex align-items-center p-2 mb-2"} style={{backgroundColor: "#1f7c1d", borderRadius: "0.5rem"}}>
                         <div>
@@ -308,7 +352,7 @@ function Game({game, cards, socket}) {
 
                     {
                         game.gameState === 'PICK_HOKM' ?
-                            cards.filter(c => !c.placed).map((card, index) => (
+                            cards.map((card, index) => (
                                 <div key={index} className={`card-item${index === 0 ? '' : ' overlap-margin'}`} onClick={() => socket.emit('select-hokm', {
                                     suit: card.suit
                                 })}>
@@ -317,11 +361,8 @@ function Game({game, cards, socket}) {
                             ))
                             :
                             cards.filter(c => !c.placed).map((card, index) => (
-                                <div key={index} className={`card-item${index === 0 ? '' : ' overlap-margin'}`} onClick={() => socket.emit('place-card', {
-                                    gameId: game.id,
-                                    cardId: card.id
-                                })}>
-                                    <img src={CardSVG[`${card.suit}${card.value}`]}  alt={`${card.suit}${card.value}`}/>
+                                <div key={index} className={`card-item${index === 0 ? '' : ' overlap-margin'} `} onClick={(e) => handlePlaceCard(e, game.id, card.id)}>
+                                    <img className={`${selectedCard !== null && selectedCard.cardId === card.id ? 'selected-card pulse-blue' : ''}`} src={CardSVG[`${card.suit}${card.value}`]}  alt={`${card.suit}${card.value}`}/>
                                 </div>
                             ))
                     }

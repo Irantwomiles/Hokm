@@ -132,8 +132,13 @@ body {
 
   }
 
+  .selected-card {
+    border: 2px solid #3970a4 !important;
+    border-radius: 0.25rem;
+  }
+
   .overlap-margin {
-    margin-left: -2rem;
+    margin-left: -4.25rem;
   }
 
   .d-none-md-down {
@@ -148,6 +153,8 @@ body {
       height: 8rem;
       width: 5.5rem;
       object-fit: cover;
+      border: 1px solid #0000001c;
+      border-radius: 0.25rem;
     }
   }
 }

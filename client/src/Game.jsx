@@ -36,7 +36,7 @@ function Game({game, cards, socket}) {
 
     function getHakemName() {
 
-        if(game.hakem === null) return 'Not yet selected';
+        if(game.hakem === null) return <i className="fa-solid fa-circle-notch fa-spin" />;
 
         for(const p of [p1, p2, p3, p4]) {
             if(p === null) continue;
@@ -45,12 +45,12 @@ function Game({game, cards, socket}) {
             }
         }
 
-        return 'Not yet selected';
+        return <i className="fa-solid fa-circle-notch fa-spin" />;
     }
 
     function getHokm() {
 
-        if(game.hokm.length === 0) return 'Not yet selected';
+        if(game.hokm.length === 0) return <></>;
 
         switch (game.hokm.toLowerCase()) {
             case 'heart': {
@@ -66,7 +66,7 @@ function Game({game, cards, socket}) {
                 return <img style={{height: "1.5rem", width: "1.5rem"}}  src={CardSVG.SpadeSuit} alt={'spade suit'} />
             }
             default:
-                return 'Unknown suit, try again';
+                return  <></>;
         }
     }
 
@@ -135,6 +135,34 @@ function Game({game, cards, socket}) {
 
     }
 
+    function renderTeamScores(game, socketId) {
+
+        if(!game) return <></>
+
+        const playerTeam = getPlayerTeam(socketId) === 'TEAM_ONE' ? game.teamOneHands : game.teamTwoHands;
+        const otherTeam = getPlayerTeam(socketId) === 'TEAM_ONE' ? game.teamTwoHands : game.teamOneHands;
+        return (
+            <>
+                <div className={"hands-won mb-2"}>
+                    {
+                        Array(playerTeam).fill(0).map((v, index) => (
+                            <img key={index} src={CardSVG['BlueBack']}  alt={'blue card back'}/>
+                        ))
+                    }
+                </div>
+
+                <div className={"hands-won"}>
+                    {
+                        Array(otherTeam).fill(0).map((v, index) => (
+                            <img key={index} src={CardSVG['RedBack']}  alt={'red card back'}/>
+                        ))
+                    }
+                </div>
+            </>
+            )
+
+    }
+
     return (
         <>
 
@@ -154,22 +182,20 @@ function Game({game, cards, socket}) {
 
                 <div className={"board p-2"} onClick={() => {
                     setSelectedCard(null);
-                    console.log("set card null");
                 }}>
 
                     <div className={"d-flex align-items-center p-2 mb-2"} style={{backgroundColor: "#1f7c1d", borderRadius: "0.5rem"}}>
                         <div>
-                            <div>Your Team: {getPlayerTeam(socket.id) === 'TEAM_ONE' ? game.teamOnePoints : game.teamTwoPoints}</div>
-                            <div>Other Team: {getPlayerTeam(socket.id) === 'TEAM_ONE' ? game.teamTwoPoints : game.teamOnePoints}</div>
+                            {renderTeamScores(game, socket.id)}
                         </div>
 
                         <div className={"game-info"}>
                             <div className={"ms-auto"}>
-                                <div>Hakem <i className="fa-solid fa-crown" style={{color: "#f8ce00"}} /> is {getHakemName()} </div>
+                                <div>Hakem <i className="fa-solid fa-crown" style={{color: "#f8ce00"}} /> {getHakemName()} </div>
                             </div>
 
                             <div className={"ms-4"}>
-                                <div>Hokm {getHokm()} </div>
+                                <div>{getHokm()}</div>
                             </div>
                         </div>
 

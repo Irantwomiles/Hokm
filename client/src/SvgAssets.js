@@ -57,3 +57,6 @@ export {default as Spades12}    from './assets/spades_queen.svg';
 export {default as Spades13}    from './assets/spades_king.svg';
 export {default as Spades14}    from './assets/spades_ace.svg';
 export {default as SpadeSuit}    from './assets/spade.svg';
+
+export {default as BlueBack}    from './assets/blue.svg';
+export {default as RedBack}    from './assets/red.svg';

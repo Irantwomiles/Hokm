@@ -4,6 +4,8 @@ export default class Team {
         this.playerOne = null;
         this.playerTwo = null;
 
+        this.name = "";
+
         // Hands won in the current round
         this.handsWon = 0;
 
@@ -21,11 +23,13 @@ export default class Team {
     addPlayer(socketId, {playerId, playerName}) {
         if(this.playerOne === null) {
             this.playerOne = new Player(socketId, playerId, playerName);
+            this.name = this.playerOne.name;
             return true;
         }
 
         if(this.playerTwo === null) {
             this.playerTwo = new Player(socketId, playerId, playerName);
+            this.name = this.playerTwo.name;
             return true;
         }
 
@@ -45,6 +49,16 @@ export default class Team {
         if(this.playerTwo !== null && this.playerTwo.id === playerId) {
             this.playerTwo = null;
             return true;
+        }
+
+        return false;
+    }
+
+    isPlayerInTeam(id) {
+        for(const p of [this.playerOne, this.playerTwo]) {
+            if(p === null) continue;
+
+            if(p.id === id) return true;
         }
 
         return false;

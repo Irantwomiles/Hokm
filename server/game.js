@@ -101,26 +101,32 @@ export default class Game {
         // this.gameTimer = setInterval(this.handleGameLoop, 1000);
     }
 
-    handleSelectHakem() {
-        let randomNumber = Math.floor(Math.random() * 4) + 1;
-        switch(randomNumber) {
-            case 1:
-                this.hakem = this.teamOne.playerOne.getPlayerInfo();
-                break;
-            case 2:
-                this.hakem = this.teamOne.playerTwo.getPlayerInfo();
-                break;
-            case 3:
-                this.hakem = this.teamTwo.playerOne.getPlayerInfo();
-                break;
-            case 4:
-                this.hakem = this.teamTwo.playerTwo.getPlayerInfo();
-                break;
-            default:
-                break;
-        }
+    handleSelectHakem(player=null) {
 
-        console.log(`[Server] Selected HAKEM ${this.hakem.name}`);
+        if(player === null) {
+            let randomNumber = Math.floor(Math.random() * 4) + 1;
+            switch(randomNumber) {
+                case 1:
+                    this.hakem = this.teamOne.playerOne.getPlayerInfo();
+                    break;
+                case 2:
+                    this.hakem = this.teamOne.playerTwo.getPlayerInfo();
+                    break;
+                case 3:
+                    this.hakem = this.teamTwo.playerOne.getPlayerInfo();
+                    break;
+                case 4:
+                    this.hakem = this.teamTwo.playerTwo.getPlayerInfo();
+                    break;
+                default:
+                    break;
+            }
+
+            console.log(`[Server] Selected HAKEM ${this.hakem.name}`);
+
+        } else {
+            this.hakem = player;
+        }
 
         this.gameState = 'PICK_HOKM';
 
@@ -205,28 +211,27 @@ export default class Game {
         return id !== null && id === this.hakem;
     }
 
-    setPlacementOrder(id) {
-
+    getPlayerOrder(id) {
         switch(id) {
             case this.teamOne.playerOne.id: {
-                this.placementOrder = [this.teamOne.playerOne.id, this.teamTwo.playerTwo.id, this.teamOne.playerTwo.id, this.teamTwo.playerOne.id];
-                break;
+                return [this.teamOne.playerOne.id, this.teamTwo.playerTwo.id, this.teamOne.playerTwo.id, this.teamTwo.playerOne.id];
             }
             case this.teamOne.playerTwo.id: {
-                this.placementOrder = [this.teamOne.playerTwo.id, this.teamTwo.playerOne.id, this.teamOne.playerOne.id, this.teamTwo.playerTwo.id];
-                break;
+                return [this.teamOne.playerTwo.id, this.teamTwo.playerOne.id, this.teamOne.playerOne.id, this.teamTwo.playerTwo.id];
             }
             case this.teamTwo.playerOne.id: {
-                this.placementOrder = [this.teamTwo.playerOne.id, this.teamOne.playerOne.id, this.teamTwo.playerTwo.id, this.teamOne.playerTwo.id];
-                break;
+                return [this.teamTwo.playerOne.id, this.teamOne.playerOne.id, this.teamTwo.playerTwo.id, this.teamOne.playerTwo.id];
             }
             case this.teamTwo.playerTwo.id: {
-                this.placementOrder = [this.teamTwo.playerTwo.id, this.teamOne.playerTwo.id, this.teamTwo.playerOne.id, this.teamOne.playerOne.id];
-                break;
+                return [this.teamTwo.playerTwo.id, this.teamOne.playerTwo.id, this.teamTwo.playerOne.id, this.teamOne.playerOne.id];
             }
             default:
-                break;
+                return [];
         }
+    }
+
+    setPlacementOrder(id) {
+        this.placementOrder = this.getPlayerOrder(id);
     }
 
     placeDownCard(playerId, cardId) {
@@ -314,7 +319,30 @@ export default class Game {
                 return;
             }
 
-            team.points++;
+            team.handsWon += 7;
+
+            if(team.handsWon >= 7) {
+
+                this.teamOne.handsWon = 0;
+                this.teamTwo.handsWon = 0;
+
+                team.points++;
+
+                if(team.points >= 7) {
+                    console.log("Team " + team.name + " has won!");
+                    this.gameState = 'FINISHED';
+                    return;
+                }
+
+                this.clearCards();
+
+                this.gameState = 'PICK_HAKEM';
+
+                const nextHakem = team.isPlayerInTeam(this.hakem.id) ? this.hakem : this.getPlayer(this.getPlayerOrder(this.hakem.id)[1]).getPlayerInfo();
+                this.handleSelectHakem(nextHakem);
+
+                return;
+            }
 
             this.gameState = 'BETWEEN_HANDS';
             this.updateGameState();
@@ -364,6 +392,22 @@ export default class Game {
         return null;
     }
 
+    clearCards() {
+        this.placementOrder = [];
+        this.placementTurn = 0;
+        this.cardsDown = [];
+        this.currentRoundSuit = null;
+
+        this.deck = new Deck();
+        this.deck.shuffle();
+
+        for(const p of this.getPlayers()) {
+            if(p === null) continue;
+
+            p.cards = [];
+        }
+    }
+
     getGameState() {
 
         const p1 = this.teamOne.playerOne ? this.teamOne.playerOne.getPlayerInfo() : null;
@@ -387,7 +431,9 @@ export default class Game {
             teamTwo: [p3, p4],
             allPlayers: [p1, p2, p3, p4],
             teamOnePoints: this.teamOne.points,
-            teamTwoPoints: this.teamTwo.points
+            teamTwoPoints: this.teamTwo.points,
+            teamOneHands: this.teamOne.handsWon,
+            teamTwoHands: this.teamTwo.handsWon
         }
     }
 

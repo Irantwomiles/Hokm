@@ -119,6 +119,6 @@ function getSuit(suit) {
     }
 }
 
-server.listen(PORT, '10.204.87.185',() => {
+server.listen(PORT, 'localhost',() => {
     console.log(`listening on *:${PORT}`);
 });
